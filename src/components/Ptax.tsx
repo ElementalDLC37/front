@@ -25,12 +25,16 @@ ChartJS.register(
 
 export default function Ptax() {
     const labels = ['10:00', '11:00', '12:00', '13:00']
-    const [date, setDate] = useState(new Date().toLocaleDateString('en-US'))
+    const [date, setDate] = useState(null)
     const [ptax, setPtax] = useState(null)
     
     useEffect(() => {
-        axios.get("http://127.0.0.1:5000/ptax?date=" + date).then(response => {
+        axios.get(`http://127.0.0.1:5000/ptax${ date ? '?date=' + date : '' }`).then(response => {
+            if (response.data.code == 404) {
+                return
+            }
             setPtax(response.data)
+            setDate(response.data.date)
         })
     }, [date])
 
